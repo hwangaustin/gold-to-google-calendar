@@ -23,7 +23,7 @@ function createBasicNotification(options) {
         'title': options.title,
         'message': options.message,
         'isClickable': true,
-        //'requireInteraction': true,
+        'requireInteraction': true,
     };
     chrome.notifications.create(options.id, notificationOptions, function(notificationId) {});
 }
@@ -159,6 +159,13 @@ function post(options) {
     xhr.send(options.event);
 }
 
+function showPageAction( tabId, changeInfo, tab ) {
+	if(tab.url == "https://my.sa.ucsb.edu/gold/StudentSchedule.aspx"){
+		chrome.pageAction.show(tabId);
+	}
+};
+chrome.tabs.onUpdated.addListener(showPageAction);
+
 // add a check to see which notification was clicked ...
 chrome.notifications.onClicked.addListener(function() {
     notificationClicked('start-auth');
@@ -180,8 +187,9 @@ chrome.runtime.onMessage.addListener(
                 alert(request.count + ' exams have been added to your Google Calendar.');
                 chrome.tabs.create({ url: "https://calendar.google.com/calendar/r/week/" + request.tabInfo.year + '/' + request.tabInfo.month + '/' + request.tabInfo.day}); // use event data to open to the week of the exams
             }
-            else if (request.curr == request.count && request.greeting == "AddExamsClick") {
-            }
+        }
+        else if (request.greeting == "done") {
+          alert('All course schedules have been added to your Google Calendar.');
         }
 });
 

@@ -105,8 +105,8 @@ function setTitlesDescriptions() {
     COURSE_TITLES.push(titleDescription[0]);
     COURSE_DESCRIPTIONS.push(titleDescription[1]);
   }
-  console.log(COURSE_TITLES);
-  console.log(COURSE_DESCRIPTIONS);
+  //console.log(COURSE_TITLES);
+  //console.log(COURSE_DESCRIPTIONS);
 }
 
 
@@ -116,35 +116,31 @@ function setTitlesDescriptions() {
 function militaryTime(time) {
   var newTime = "";
   var timeSplit = time.split(' ');
-  switch (timeSplit[1]) {
-    case "AM": {
-      if (timeSplit[0] == "12:00") {
+  switch (timeSplit[1])
+  {
+    case "AM":
+      if (timeSplit[0] == "12:00")
+      {
         newTime = "00:00"
       }
-      else {
+      else
+      {
         newTime = timeSplit[0];
       }
       break;
-    }
-
-    case "PM": {
+    case "PM":
       if (timeSplit[0].charAt(0)=='1' && timeSplit[0].charAt(1)=='2')
       {
         newTime = timeSplit[0];
       }
-      else {
+      else
+      {
         var hourMinutes = timeSplit[0].split(':');
         var hour = parseInt(hourMinutes[0]);
         hour += 12;
         newTime = hour + ":" + hourMinutes[1];
       }
       break;
-    }
-
-    default: {
-      newTime = "";
-      break;
-    }
   }
   return newTime;
 }
@@ -153,28 +149,31 @@ function militaryTime(time) {
  *	Called when the 'Add Courses' button is clicked
  */
 function addCoursesClickHandler() {
-	for(var i = 0; i < COURSE_COUNT; i++) {
+	for(var i = 0; i < lectureEvents.length; i++) {
 		chrome.runtime.sendMessage(
 			{
         greeting: "AddCoursesClick",
 			  event: lectureEvents[i],
-		    count: COURSE_COUNT,
+		    count: lectureEvents.length,
 		    curr: i
 			},
 			function(response) {
 				console.log("lecture" + i + ' message sent\n');
 			});
+  }
+  for(var i = 0; i < sectionEvents.length; i++) {
     chrome.runtime.sendMessage(
       {
         greeting: "AddCoursesClick",
         event: sectionEvents[i],
-        count: COURSE_COUNT,
+        count: sectionEvents.length,
         curr: i
       },
       function(response) {
         console.log("section" + i + ' message sent\n');
       });
-	}
+  }
+  chrome.runtime.sendMessage({greeting: "done"});
 }
 
 /*
@@ -252,8 +251,8 @@ function loadCourseEvents() {
       }
 
       var days = courseDataCells[0].innerText.replace(/\s/g, "");
-      console.log(days);
-      console.log(days.length);
+      //console.log(days);
+      //console.log(days.length);
 
       var recur = recurDayLUT[days.charAt(0)];
 
@@ -261,7 +260,7 @@ function loadCourseEvents() {
         recur += ',' + recurDayLUT[days.charAt(k)];
       }
 
-      console.log(recur);
+      //console.log(recur);
 
       var timeRange = courseDataCells[1].innerText.split('-');
 
@@ -278,7 +277,7 @@ function loadCourseEvents() {
       var location = courseDataCells[2].innerText;
       //console.log(location);
 
-      console.log((firstDayLUT[CURRENT_QUARTER.quarter])['M']);
+      //console.log((firstDayLUT[CURRENT_QUARTER.quarter])['M']);
 
       var currStartDateTime = (firstDayLUT[CURRENT_QUARTER.quarter][days.charAt(0)]) + startTime + ":00-07:00";
       var currEndDateTime = firstDayLUT[CURRENT_QUARTER.quarter][days.charAt(0)] + endTime + ":00-07:00";
@@ -339,8 +338,8 @@ function loadCourseEvents() {
     sectionEvents.push(event_json_string2);
   }
 
-  console.log(lectureEvents);
-  console.log(sectionEvents);
+  //console.log(lectureEvents);
+  //console.log(sectionEvents);
 
 }
 
@@ -400,7 +399,6 @@ function getExamData() {
 			endTimes.push(finalEndTime);
 		}
 		else if(tableCells3[i].innerText == 'Contact Professor for Final Exam Information' || tableCells3[i].innerText == 'Unknown Date'){
-			years.push("none");
 			startTimes.push("none");
 			endTimes.push("none");
 		}
@@ -451,7 +449,7 @@ function getExamData() {
 
 // set the current quarter
 CURRENT_QUARTER = getCurrentQuarter();
-console.log(CURRENT_QUARTER);
+//console.log(CURRENT_QUARTER);
 
 // set course count
 COURSE_COUNT = getCourseCount();

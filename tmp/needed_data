@@ -1,0 +1,21 @@
+background.js
+- year/month/day of quarter start & exam start
+
+content.js
+exam_events_json = {
+  summary:
+  description:
+  location:
+  colorId:
+  start:
+  end:
+}
+lecture/section_events_json = {
+  summary:
+  description:
+  location:
+  colorId:
+  start:
+  end:
+  recurrence:
+}

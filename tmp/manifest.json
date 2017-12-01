@@ -6,6 +6,11 @@
   "description": "Add your current qaurter final exam schedule to Google Calendar.",
   "version": "0.4.1",
 
+  "page_action": {
+    "default_icon": "img/ucsb_logo.png",
+    "default_popup": "docs/popup.html"
+  },
+
   "background": {
     "scripts": ["src/background.js"],
     "persistent": false
@@ -14,7 +19,7 @@
   "content_scripts": [
     {
       "matches": ["https://my.sa.ucsb.edu/gold/StudentSchedule.aspx"],
-      "js": ["src/event.js", "src/content.js"]
+      "js": ["src/luts.js", "src/content.js"]
     }
   ],
 
