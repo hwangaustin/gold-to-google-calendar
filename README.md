@@ -1,4 +1,4 @@
-# gold-to-google-calendar
+# ucsb-gold-calendar
 Chrome extension to add course and exam schedules from GOLD to Google Calendar.
 
 ## Installation
