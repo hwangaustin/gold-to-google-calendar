@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(
         success: function(){
           if (request.size == request.count)
           {
-            chrome.tabs.create({url: "https://calendar.google.com/calendar/r"});
+            chrome.tabs.create({url: "https://calendar.google.com/calendar/r/week/" + request.tabInfo});
           }
         }
       });

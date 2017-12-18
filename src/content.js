@@ -74,7 +74,11 @@ function MilitaryTime(time) {
 	return hourMin[0] + ":" + hourMin[1];
 }
 
-function GetClassStart(times, firstDay, quarter) {
+function GetClassStart(times, recur, quarter) {
+	var firstDay = recur[0];
+	if (content.currentQuarter == "winter2018" && recur[0] == "M") {
+		firstDay = recur[1];
+	}
 	var startTime = times.split("-");
 	startTime = startTime[0].split(" ");
 	startTime = MilitaryTime(startTime);
@@ -82,7 +86,11 @@ function GetClassStart(times, firstDay, quarter) {
 	return startDateTime;
 }
 
-function GetClassEnd(times, firstDay, quarter) {
+function GetClassEnd(times, recur, quarter) {
+	var firstDay = recur[0];
+	if (content.currentQuarter == "winter2018" && recur[0] == "M") {
+		firstDay = recur[1];
+	}
 	var endTime = times.split("-");
 	endTime = endTime[1].split(" ");
 	endTime = MilitaryTime(endTime);
@@ -114,15 +122,15 @@ function GetExamEnd(date) {
 function LectureEvent(title, location, recur, times, quarter) {
 	//this.id = "goldcourseevent" + quarter;
 	this.summary = GetCourseNumber(title) + " - Lecture";
-	this.colorId = "4"; // 1 - 11
+	this.colorId = "10"; // 1 - 11
 	this.location = location;
 	this.recurrence = [GetRecur(recur, quarter)];
 	this.start = {
-		dateTime: GetClassStart(times, recur[0], quarter),
+		dateTime: GetClassStart(times, recur.split(" "), quarter),
 		timeZone: "America/Los_Angeles"
 	};
 	this.end = {
-		dateTime: GetClassEnd(times, recur[0], quarter),
+		dateTime: GetClassEnd(times, recur.split(" "), quarter),
 		timeZone: "America/Los_Angeles"
 	};
 }
@@ -130,15 +138,15 @@ function LectureEvent(title, location, recur, times, quarter) {
 function SectionEvent(title, location, recur, times, quarter) {
 	//this.id = "goldcourseevent" + quarter;
 	this.summary = GetCourseNumber(title) + " - Section";
-	this.colorId = "8"; // 1 - 11
+	this.colorId = "7"; // 1 - 11
 	this.location = location;
 	this.recurrence = [GetRecur(recur, quarter)];
 	this.start = {
-		dateTime: GetClassStart(times, recur[0], quarter),
+		dateTime: GetClassStart(times, recur.split(" "), quarter),
 		timeZone: "America/Los_Angeles"
 	};
 	this.end = {
-		dateTime: GetClassEnd(times, recur[0], quarter),
+		dateTime: GetClassEnd(times, recur.split(" "), quarter),
 		timeZone: "America/Los_Angeles"
 	};
 }
@@ -181,7 +189,6 @@ function GetCourseEvents() {
 	}
 	return courseEvents;
 }
-//console.log(GetCourseEvents());
 
 function GetExamEvents() {
 	var examEvents = [];
@@ -193,18 +200,18 @@ function GetExamEvents() {
 		var exam = new ExamEvent(title, date, content.currentQuarter);
 		examEvents.push(exam);
 	}
-	console.log(examEvents);
 	return examEvents;
 }
 
-function SendEventsToBg(events) {
+function SendEventsToBg(events, tab) {
 	for (var i = 0; i < events.length; i++) {
 		chrome.runtime.sendMessage(
 			{
 				greeting: "event-info",
-				event: JSON.stringify(events[i]),
 				size: events.length,
-				count: i + 1
+				count: i + 1,
+				event: JSON.stringify(events[i]),
+				tabInfo: tab[0] + "/" + tab[1] + "/" + tab[2]
 			},
 			function(response) {
 				console.log(response);
@@ -220,9 +227,10 @@ chrome.runtime.onMessage.addListener(
       console.log("course-click message accepted by content");
 			// Get Course (Lecture and Section) info
 			var courseEvents = GetCourseEvents();
-			console.log(courseEvents);
+			// Get calendar tab info
+			var tab = quarterLUT[content.currentQuarter]["courses"];
 			// Send Course events to bg page
-			SendEventsToBg(courseEvents);
+			SendEventsToBg(courseEvents, tab);
       sendResponse({farewell: "course-click handled"})
     }
     else if (request.greeting == "exam-click")
@@ -230,8 +238,10 @@ chrome.runtime.onMessage.addListener(
       console.log("exam-click message accepted by content");
 			// Get Exam info
 			var examEvents = GetExamEvents();
+			// Get calendar tab info
+			var tab = quarterLUT[content.currentQuarter]["final"];
 			// Send Exam events to bg page
-			SendEventsToBg(examEvents);
+			SendEventsToBg(examEvents, tab);
       sendResponse({farewell: "exam-click handled"})
     }
     else if (request.greeting == "both-click")
@@ -240,8 +250,10 @@ chrome.runtime.onMessage.addListener(
 			// Get Lecture, Section, and Exam info
 			var courseEvents = GetCourseEvents();
 			var examEvents = GetExamEvents();
+			// Get calendar tab info
+			var tab = quarterLUT[content.currentQuarter]["courses"];
 			// Send Lecture, Section, and Exam events to bg page
-			SendEventsToBg(courseEvents.concat(examEvents));
+			SendEventsToBg(courseEvents.concat(examEvents), tab);
 			sendResponse({farewell: "both-click handled"})
     }
   }
