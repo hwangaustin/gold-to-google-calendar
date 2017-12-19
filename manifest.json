@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "name": "ucsb-gold calendar",
   "description": "Add your current qaurter final exam schedule to Google Calendar.",
-  "version": "0.5",
+  "version": "1.01",
 
   "background": {
     "page": "docs/background.html",
