@@ -122,7 +122,7 @@ function GetExamEnd(date) {
 function LectureEvent(title, location, recur, times, quarter) {
 	//this.id = "goldcourseevent" + quarter;
 	this.summary = GetCourseNumber(title) + " - Lecture";
-	this.colorId = "10"; // 1 - 11
+	this.colorId = "9"; // 1 - 11
 	this.location = location;
 	this.recurrence = [GetRecur(recur, quarter)];
 	this.start = {
@@ -138,7 +138,7 @@ function LectureEvent(title, location, recur, times, quarter) {
 function SectionEvent(title, location, recur, times, quarter) {
 	//this.id = "goldcourseevent" + quarter;
 	this.summary = GetCourseNumber(title) + " - Section";
-	this.colorId = "7"; // 1 - 11
+	this.colorId = "10"; // 1 - 11
 	this.location = location;
 	this.recurrence = [GetRecur(recur, quarter)];
 	this.start = {
