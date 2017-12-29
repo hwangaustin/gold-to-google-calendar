@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "name": "ucsb-gold calendar",
   "description": "Add your current classes and exams to Google Calendar.",
-  "version": "1.02",
+  "version": "1.03",
 
   "background": {
     "page": "docs/background.html",

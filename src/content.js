@@ -231,7 +231,7 @@ chrome.runtime.onMessage.addListener(
 			var tab = quarterLUT[content.currentQuarter]["courses"];
 			// Send Course events to bg page
 			SendEventsToBg(courseEvents, tab);
-      sendResponse({farewell: "course-click handled"})
+      sendResponse({farewell: "course-click handled"});
     }
     else if (request.greeting == "exam-click")
     {
@@ -242,7 +242,7 @@ chrome.runtime.onMessage.addListener(
 			var tab = quarterLUT[content.currentQuarter]["final"];
 			// Send Exam events to bg page
 			SendEventsToBg(examEvents, tab);
-      sendResponse({farewell: "exam-click handled"})
+      sendResponse({farewell: "exam-click handled"});
     }
     else if (request.greeting == "both-click")
     {
@@ -254,7 +254,7 @@ chrome.runtime.onMessage.addListener(
 			var tab = quarterLUT[content.currentQuarter]["courses"];
 			// Send Lecture, Section, and Exam events to bg page
 			SendEventsToBg(courseEvents.concat(examEvents), tab);
-			sendResponse({farewell: "both-click handled"})
+			sendResponse({farewell: "both-click handled"});
     }
   }
 );
