@@ -197,8 +197,11 @@ function GetExamEvents() {
 	{
 		var title = examDivs[i].children[0].innerText; // "CMPSC 165A - ARTIF INTELLIGENCE"
 		var date = examDivs[i].children[1].innerText; // "Monday, March 19, 2018 12:00 PM - 3:00 PM"
-		var exam = new ExamEvent(title, date, content.currentQuarter);
-		examEvents.push(exam);
+		if (date != "Contact Professor for Final Exam Information")
+		{
+			var exam = new ExamEvent(title, date, content.currentQuarter);
+			examEvents.push(exam);
+		}
 	}
 	return examEvents;
 }
