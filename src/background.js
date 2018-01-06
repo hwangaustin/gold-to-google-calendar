@@ -24,6 +24,7 @@ chrome.runtime.onMessage.addListener(
         contentType: "application/json",
         url: "https://www.googleapis.com/calendar/v3/calendars/primary/events" + "?access_token=" + encodeURIComponent(bg.auth),
         data: request.event,
+				cache: true,
         success: function(){
           if (request.size == request.count)
           {

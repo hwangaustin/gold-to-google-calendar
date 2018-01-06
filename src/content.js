@@ -1,16 +1,12 @@
 
 /*
 var content = {
-	currentQuarter: GetCurrentQuarter(),
-	//courseEvents: GetCourseEvents(GetCurrentQuarter()),
-	//lectureEvents: [],
-	//sectionEvents: [],
-	//examEvents: [],
+
 }
 console.log(content);
 */
 
-/*
+/* edit****
  *  Return an object conatining the current quarter and year
  *  @return {object} - current quarter info
  *    @value {string} - quarter: Fall, Winter, Spring, Summer
@@ -21,20 +17,13 @@ function GetCurrentQuarter() {
 	for (var i = 0; i < quarterDropDown.length; i++) {
 		if (quarterDropDown[i].selected)
 		{
-			/*
-			var quarterSplit = (quarterDropDown[i].innerText).split(" ");
-			var quarter = {
-				"quarter": quarterSplit[0],
-				"year": quarterSplit[1]
-			}
-			*/
 			var quarter = quarterDropDown[i].innerText.replace(" ", "");
 			quarter = quarter.toLowerCase();
 			return quarter;
 		}
 	}
 }
-//console.log(GetCurrentQuarter());
+console.log(GetCurrentQuarter());
 
 
 function GetCourseNumber(title) {
@@ -176,17 +165,17 @@ function GetCourseEvents() {
 		var title = courseDivs[i].children[0].children[0].children[0].innerText; // "CMPSC 165A - ARTIF INTELLIGENCE"
 		var infoDivs = courseDivs[i].getElementsByClassName("row session");
 		var lectureLocation = infoDivs[0].children[4].children["0"].innerText; // "Location↵Psychology Building, Room 1924"
-		var lectureRecur = infoDivs[0].children[1].children["0"].innerText; // "Days↵T R"
+		var lectureRecur = infoDivs[0].children[1].innerText; // "Days↵T R"
+		console.log(lectureRecur);
 		var lectureTimes = infoDivs[0].children[3].innerText; // "Time↵12:30 PM-1:45 PM"
-		console.log(lectureTimes);
 		var lecture = new LectureEvent(title, lectureLocation, lectureRecur, lectureTimes, currentQuarter);
 		courseEvents.push(lecture);
 
 		if (infoDivs.length > 1)
 		{
 			var sectionLocation = infoDivs[1].children[4].children[0].innerText; // "Buchanan Hall, Room 1920"
-			var sectionRecur = infoDivs[1].children[1].children[0].innerText; // "T R"
-			var sectionTimes = infoDivs[1].children[3].children[0].innerText; // "9:30 AM-10:45 AM"
+			var sectionRecur = infoDivs[1].children[1].innerText; // "T R"
+			var sectionTimes = infoDivs[1].children[3].innerText; // "9:30 AM-10:45 AM"
 			var section = new SectionEvent(title, sectionLocation, sectionRecur, sectionTimes, currentQuarter);
 			courseEvents.push(section);
 		}
@@ -196,6 +185,7 @@ function GetCourseEvents() {
 
 function GetExamEvents() {
 	var examEvents = [];
+	var currentQuarter = GetCurrentQuarter();
 	var examDivs = document.getElementsByClassName("row finalBlock");
 	for (var i = 0; i < examDivs.length - 1; i++)
 	{
@@ -203,7 +193,7 @@ function GetExamEvents() {
 		var date = examDivs[i].children[1].innerText; // "Monday, March 19, 2018 12:00 PM - 3:00 PM"
 		if (date != "Contact Professor for Final Exam Information")
 		{
-			var exam = new ExamEvent(title, date, content.currentQuarter);
+			var exam = new ExamEvent(title, date, currentQuarter);
 			examEvents.push(exam);
 		}
 	}
@@ -235,7 +225,7 @@ chrome.runtime.onMessage.addListener(
 			// Get Course (Lecture and Section) info
 			var courseEvents = GetCourseEvents();
 			// Get calendar tab info
-			var tab = quarterLUT[content.currentQuarter]["courses"];
+			var tab = quarterLUT[GetCurrentQuarter()]["courses"];
 			// Send Course events to bg page
 			SendEventsToBg(courseEvents, tab);
       sendResponse({farewell: "course-click handled"});
@@ -258,7 +248,7 @@ chrome.runtime.onMessage.addListener(
 			var courseEvents = GetCourseEvents();
 			var examEvents = GetExamEvents();
 			// Get calendar tab info
-			var tab = quarterLUT[content.currentQuarter]["courses"];
+			var tab = quarterLUT[GetCurrentQuarter()]["courses"];
 			// Send Lecture, Section, and Exam events to bg page
 			SendEventsToBg(courseEvents.concat(examEvents), tab);
 			sendResponse({farewell: "both-click handled"});
