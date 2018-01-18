@@ -1,8 +1,3 @@
-/*
-var bg = {
-  auth: ""
-}
-*/
 
 
 function showPageAction(tabId, changeInfo, tab) {

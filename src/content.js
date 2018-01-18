@@ -66,6 +66,21 @@ function MilitaryTime(time) {
 	return hourMin[0] + ":" + hourMin[1];
 }
 
+function MilitaryTimeExam(time) {
+	var hourMin = time[0].split(":");
+	hourMin[0] = parseInt(hourMin[0]);
+	if (hourMin[0] != 12 && time[1] == "PM") {
+		hourMin[0] += 12;
+	}
+	else if (hourMin[0] == 12 && time[1] == "AM") {
+		hourMin[0] = 0;
+	}
+	hourMin[0];
+	hourMin[0] = hourMin[0].toString();
+	hourMin[0] = hourMin[0].padStart(2, "0");
+	return hourMin[0] + ":" + hourMin[1];
+}
+
 function GetClassStart(times, recur, quarter) {
 	var firstDay = recur[0];
 	if (quarter == "winter2018" && recur[0] == "M") {
@@ -96,7 +111,7 @@ function GetExamStart(date) {
 	start = start.replace("- ", "");
 	start = start.split(" "); // ["Monday", "March", "19", "2018", "12:00", "PM", "3:00", "PM"]
 	var startTime = [start[4], start[5]];
-	startTime = MilitaryTime(startTime);
+	startTime = MilitaryTimeExam(startTime);
 	var startDateTime = start[3] + "-" + monthLUT[start[1]] + "-" + start[2] + "T" + startTime + ":00-07:00";
 	return startDateTime;
 }
@@ -106,7 +121,7 @@ function GetExamEnd(date) {
 	end = end.replace("- ", "");
 	end = end.split(" "); // ["Monday", "March", "19", "2018", "12:00", "PM", "3:00", "PM"]
 	var endTime = [end[6], end[7]];
-	endTime = MilitaryTime(endTime);
+	endTime = MilitaryTimeExam(endTime);
 	var endDateTime = end[3] + "-" + monthLUT[end[1]] + "-" + end[2] + "T" + endTime + ":00-07:00";
 	return endDateTime;
 }
@@ -165,16 +180,16 @@ function GetCourseEvents() {
 	{
 		var title = courseDivs[i].children[0].children[0].children[0].innerText; // "CMPSC 165A - ARTIF INTELLIGENCE"
 		var infoDivs = courseDivs[i].getElementsByClassName("row session");
-		var lectureLocation = infoDivs[0].children[4].children["0"].innerText; // "Location↵Psychology Building, Room 1924"
+		var lectureLocation = infoDivs[0].children[4].innerText; // "Location↵Psychology Building, Room 1924"
 		var lectureRecur = infoDivs[0].children[1].innerText; // "Days↵T R"
-		console.log(lectureRecur);
+		//console.log(lectureRecur);
 		var lectureTimes = infoDivs[0].children[3].innerText; // "Time↵12:30 PM-1:45 PM"
 		var lecture = new LectureEvent(title, lectureLocation, lectureRecur, lectureTimes, currentQuarter);
 		courseEvents.push(lecture);
 
 		if (infoDivs.length > 1)
 		{
-			var sectionLocation = infoDivs[1].children[4].children[0].innerText; // "Buchanan Hall, Room 1920"
+			var sectionLocation = infoDivs[1].children[4].innerText; // "Buchanan Hall, Room 1920"
 			var sectionRecur = infoDivs[1].children[1].innerText; // "T R"
 			var sectionTimes = infoDivs[1].children[3].innerText; // "9:30 AM-10:45 AM"
 			var section = new SectionEvent(title, sectionLocation, sectionRecur, sectionTimes, currentQuarter);
