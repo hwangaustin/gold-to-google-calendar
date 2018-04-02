@@ -60,7 +60,7 @@ function MilitaryTime(time) {
 	else if (hourMin[0] == 12 && time[1] == "AM") {
 		hourMin[0] = 0;
 	}
-	hourMin[0]++;
+	hourMin[0];
 	hourMin[0] = hourMin[0].toString();
 	hourMin[0] = hourMin[0].padStart(2, "0");
 	return hourMin[0] + ":" + hourMin[1];
